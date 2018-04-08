@@ -21,7 +21,7 @@ import com.sendtomoon.mozart.base.BaseComponent;
 import com.sendtomoon.mozart.dao.ErrorMongoDAO;
 import com.sendtomoon.mozart.dao.StokMongoDAO;
 import com.sendtomoon.mozart.entity.ErrorDTO;
-import com.sendtomoon.mozart.entity.StokDTO;
+import com.sendtomoon.mozart.entity.LoginInfoDTO;
 import com.sendtomoon.mozart.entity.WanPageDTO;
 import com.sendtomoon.mozart.service.GetIP;
 import com.sendtomoon.mozart.tools.HttpClient;
@@ -97,9 +97,9 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 	 * 登陆路由器，获取Cookie
 	 */
 	@Override
-	public StokDTO getStok() {
+	public LoginInfoDTO getStok() {
 		try {
-			StokDTO stok = new StokDTO();
+			LoginInfoDTO stok = new LoginInfoDTO();
 			logger.info("GetStok-request-URL:[" + loginURL + "],param:[" + jsonForLogin + "]");
 			Map<String, Object> getStok = httpClient.getHttpClient(loginURL, jsonForLogin, null, null);
 			logger.info("GetStok-respon:" + getStok.get("responseMsg"));
@@ -109,7 +109,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 			for (Cookie cc : lc) {
 				bcs.addCookie(cc);
 			}
-			stok = JSON.parseObject(getStok.get("responseMsg").toString(), StokDTO.class);
+			stok = JSON.parseObject(getStok.get("responseMsg").toString(), LoginInfoDTO.class);
 			stok.setCookie(bcs);
 			stok.setHttpStatus((String) getStok.get("httpStatus"));
 			stok.setDate(TimeUtil.now());
@@ -157,7 +157,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 		return null;
 	}
 
-	/**
+	/**r
 	 * 更新DNS地址到GoDaddy
 	 */
 	@Override

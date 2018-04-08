@@ -3,7 +3,7 @@ package com.sendtomoon.mozart.dao.impl;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.sendtomoon.mozart.dao.StokMongoDAO;
-import com.sendtomoon.mozart.entity.StokDTO;
+import com.sendtomoon.mozart.entity.LoginInfoDTO;
 import com.sendtomoon.mozart.entity.WanPageDTO;
 
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -16,7 +16,7 @@ public class StokMongoDAOImpl implements StokMongoDAO {
 	private MongoTemplate mongoTemplate;
 
 	@Override
-	public void saveStok(StokDTO stok) {
+	public void saveStok(LoginInfoDTO stok) {
 		mongoTemplate.save(stok);
 	}
 

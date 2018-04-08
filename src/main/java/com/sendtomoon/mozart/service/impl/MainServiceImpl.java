@@ -8,9 +8,10 @@ import org.springframework.stereotype.Component;
 import com.sendtomoon.mozart.base.BaseComponent;
 import com.sendtomoon.mozart.dao.ErrorMongoDAO;
 import com.sendtomoon.mozart.entity.ErrorDTO;
-import com.sendtomoon.mozart.entity.StokDTO;
+import com.sendtomoon.mozart.entity.LoginInfoDTO;
 import com.sendtomoon.mozart.entity.WanPageDTO;
 import com.sendtomoon.mozart.service.GetIP;
+import com.sendtomoon.mozart.service.GetIPFromMAC1200R;
 import com.sendtomoon.mozart.service.MainService;
 import com.sendtomoon.mozart.tools.HttpClient;
 import com.sendtomoon.mozart.tools.HttpsClient;
@@ -20,19 +21,27 @@ public class MainServiceImpl extends BaseComponent implements MainService {
 
 	@Autowired
 	GetIP getIP;
+	
 	@Autowired
 	HttpsClient httpsClient;
+	
 	@Autowired
 	HttpClient httpClient;
+	
 	@Autowired
 	ErrorMongoDAO errorMongoDAO;
+	
 	@Value("${mailSwitch}")
 	private boolean mailSwitch;
+	
+	@Autowired
+	GetIPFromMAC1200R mac1200r;
+	
 
 	// 更新
 	@Override
 	public void renewtoGoddy() {
-		StokDTO stok = getIP.getStok();// 获取stok
+		LoginInfoDTO stok = getIP.getStok();// 获取stok
 		if (null == stok) {
 			logger.error("MainServiceImpl-renewtoGoddy:Stok is null.");
 			ErrorDTO error = new ErrorDTO();
@@ -55,5 +64,12 @@ public class MainServiceImpl extends BaseComponent implements MainService {
 		if (mailSwitch) {
 			getIP.sendEMailForIP(getIP.encryptByPublicKey(wp.getData().getData()[0].getPppoe_ip_addr()));
 		}
+	}
+
+
+
+	@Override
+	public void renewForMAC1200R() {
+		mac1200r.getIP();
 	}
 }

@@ -2,12 +2,12 @@ package com.sendtomoon.mozart.service;
 
 import org.apache.http.client.CookieStore;
 
-import com.sendtomoon.mozart.entity.StokDTO;
+import com.sendtomoon.mozart.entity.LoginInfoDTO;
 import com.sendtomoon.mozart.entity.WanPageDTO;
 
 public interface GetIP {
 
-	public StokDTO getStok();
+	public LoginInfoDTO getStok();
 
 	public WanPageDTO getWanPage(CookieStore cookie);
 

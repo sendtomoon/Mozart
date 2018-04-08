@@ -4,4 +4,5 @@ public interface MainService {
 
 	public void renewtoGoddy();
 	
+	public void renewForMAC1200R();
 }

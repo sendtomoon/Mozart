@@ -37,25 +37,21 @@ import javax.crypto.Cipher;
  */
 public class RSAUtils {
 
-	/** */
 	/**
 	 * 加密算法RSA
 	 */
 	public static final String KEY_ALGORITHM = "RSA";
 
-	/** */
 	/**
 	 * 签名算法
 	 */
 	public static final String SIGNATURE_ALGORITHM = "MD5withRSA";
 
-	/** */
 	/**
 	 * 获取公钥的key
 	 */
 	private static final String PUBLIC_KEY = "RSAPublicKey";
 
-	/** */
 	/**
 	 * 获取私钥的key
 	 */
@@ -64,10 +60,6 @@ public class RSAUtils {
 	private static final int KEY_SIZE = 8192;
 	static final String RSA_PUBLIC_KEY = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDTR3ifbEvDpE6zBRfsKZI9nZp7vWCWHBXHVvoljznKxef6sNZe054wHfvK4b9BRchUGcW5jI5HFnK+kuDiQZ+cbRJozyu+af5Dz2axjR5jcWGdqXu1y1fYhR82hoaKfH1pkXhtAmD6OVFZJY+qAQ4ys/9dXwjvDatiHPVOcOTbeQIDAQAB";
 	static final String RSA_PRIVATE_KEY = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBANNHeJ9sS8OkTrMFF+wpkj2dmnu9YJYcFcdW+iWPOcrF5/qw1l7TnjAd+8rhv0FFyFQZxbmMjkcWcr6S4OJBn5xtEmjPK75p/kPPZrGNHmNxYZ2pe7XLV9iFHzaGhop8fWmReG0CYPo5UVklj6oBDjKz/11fCO8Nq2Ic9U5w5Nt5AgMBAAECgYEArNT7hJaHh9xiEKnq/uKm4caKOA0b9M+2tSGecZkvcoPgl7+PLXU5Iy1z62wuEwwtqzaF+5pSTS684M6wLgX2tPfd+MaxRECutdYxlmU86yD13QvPxX5Z4hlODQET1IkSjl5wbc0rp9MeEICCz6S+1/6FDBXMRXQp7K0oznBwvf0CQQDy2fTezgAXO/6TFXhF3lk2IKR5gl02ZZ63ivwQ9SJ9BuecwqCWLiDUyezWO/bkJGkfTTXrN9vQEESmKmimjrdHAkEA3rfoZ/u0kCmdxtZXntHnhr0/EX7DD+PRKh2gcjFYu3R3b7CnkLUIqbKKJZ/JNuM98JCLNej7qyGpAe2jgC63PwJAQD89MvyYtYzfqpXRfdp3C4TTPnooos17kd8pFGtltmHvQF+VEGYftWu+RmcSyASB8xAAJbxfYMoM/1DU4st63QJAHpM2x5epeSUNcO+aBcahN0EhuGAjnTnUTCjXDvYxTUK25tFkn5wKvWkyR+oAsJVPuofNZLBAZITxc79Q89b19wJADLZigrxTebMUItAOAtnuw52YLO9/MPQoOJLr7H49DJmO6/5yMe2Xcg8bDVU4X/OM60e7PGvjjDMXx59vQukOsQ==";
-	// static final String
-	// RSA_PUBLIC_KEY="MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCL/NwvuhWyf5znP78XRly2tIOqPJxpqOM/uxKKH9AKS6/3YstRGNVQJe8KKRUwV8p5PDPgCdmDK91MoZgrJTlNDsLjah0NJ02RwHpWg8Si7j8wz7IIwmlD4PFb/Tmeco2jg5bwZpEIg96P6q9motH83palNiu+vEO6O+g2uDa2vwIDAQAB";
-	// static final String
-	// RSA_PRIVATE_KEY="MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAIv83C+6FbJ/nOc/vxdGXLa0g6o8nGmo4z+7Eoof0ApLr/diy1EY1VAl7wopFTBXynk8M+AJ2YMr3UyhmCslOU0OwuNqHQ0nTZHAelaDxKLuPzDPsgjCaUPg8Vv9OZ5yjaODlvBmkQiD3o/qr2ai0fzelqU2K768Q7o76Da4Nra/AgMBAAECgYAZEOsAZMqzzqPyyHhYG5JIaORWnEnJpaMja0TzlKS04z6cBoWvfMndcx1tbVPM9ztbIAuN51WaZkVXDmxn9V9gCCMcC2btmLXa3kAyP4jCgGs2AJtHMRGO/yBeKkVdJFm6eVGvQc1A6vr4QE5w4uFEROIPHJdbsRm+mQAsz4dYIQJBAL9SxJbSdwpyoxFJNW8lLoB+DBycmgRUHfcSPQQalM4MbgKWnxvAMisec8CmYjOAOpdVaOsPLGFQKPLjECGn/BECQQC7T3soTioBSvvbvKXJn1hOIP1ZX705wfzSIPlv77vKcaie/ld0jwb9PRVlP4HXvq2o6e6CKaH8l3iH2j6c7JXPAkAGdSC1hn0GGUBvwOzQx4x+QcLe5Fo+cyhfwnnUvaDwI3NDGxpbsW0AD5MQmY0O9/ECUpur82MoFbCMIiXVPPpBAkBGA7qkYTtASngENeq+h8ppQdmRe8Dugv1uyhaS6ciHLp7591ZXYlMZe6iwtOFi9IpTNkYJ72f2U+Qg28pFvAVvAkEAmISBBTqeTpAEyyvjXCtfb9cDPboCLXCaleDaBqSShiI9aJtAxT8nQB30rCuiU6sQUW27sKF2BWyk8KLrZ0nmWw==";
 
 	/** */
 	/**
@@ -81,7 +73,6 @@ public class RSAUtils {
 	 */
 	private static final int MAX_DECRYPT_BLOCK = KEY_SIZE / 8;
 
-	/** */
 	/**
 	 * <p>
 	 * 生成密钥对(公钥和私钥)
@@ -102,7 +93,6 @@ public class RSAUtils {
 		return keyMap;
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 用私钥对信息生成数字签名
@@ -127,7 +117,6 @@ public class RSAUtils {
 		return Base64Utils.encode(signature.sign());
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 校验数字签名
@@ -155,7 +144,6 @@ public class RSAUtils {
 		return signature.verify(Base64Utils.decode(sign));
 	}
 
-	/** */
 	/**
 	 * <P>
 	 * 私钥解密
@@ -196,7 +184,6 @@ public class RSAUtils {
 		return decryptedData;
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 公钥解密
@@ -237,7 +224,6 @@ public class RSAUtils {
 		return decryptedData;
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 公钥加密
@@ -279,7 +265,6 @@ public class RSAUtils {
 		return encryptedData;
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 公钥加密
@@ -322,7 +307,10 @@ public class RSAUtils {
 	}
 
 	/**
-	 * 用私钥解密<SPAN style="COLOR: #000000"></SPAN> * @param data 加密数据
+	 *<SPAN style="COLOR: #000000"> 用私钥解密</SPAN>
+	 * 
+	 * @param data
+	 *            加密数据
 	 * 
 	 * @param key
 	 *            密钥
@@ -341,7 +329,6 @@ public class RSAUtils {
 		return cipher.doFinal(data);
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 私钥加密
@@ -382,7 +369,6 @@ public class RSAUtils {
 		return encryptedData;
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 获取私钥
@@ -398,7 +384,6 @@ public class RSAUtils {
 		return Base64Utils.encode(key.getEncoded());
 	}
 
-	/** */
 	/**
 	 * <p>
 	 * 获取公钥

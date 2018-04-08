@@ -13,6 +13,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.sendtomoon.mozart.ReNew;
 import com.sendtomoon.mozart.entity.WanPageDTO;
 import com.sendtomoon.mozart.service.GetIP;
+import com.sendtomoon.mozart.service.GetIPFromMAC1200R;
 import com.sendtomoon.mozart.service.MainService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -24,6 +25,9 @@ public class BaseTestCase {
 
 	@Autowired
 	MainService mainService;
+	
+	@Autowired
+	GetIPFromMAC1200R mac1200r;
 
 	@Test
 	public void test1() throws ClientProtocolException, IOException {
@@ -57,5 +61,11 @@ public class BaseTestCase {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	@Test
+	public void test6() {
+		mac1200r.getIP();
+		
 	}
 }

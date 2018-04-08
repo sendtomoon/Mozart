@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.apache.http.impl.client.BasicCookieStore;
 
-public class StokDTO implements Serializable {
+public class LoginInfoDTO implements Serializable {
 
 	private static final long serialVersionUID = -8511065330781577814L;
 
