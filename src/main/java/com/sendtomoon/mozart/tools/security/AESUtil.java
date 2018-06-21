@@ -14,6 +14,10 @@ public class AESUtil {
 			for(int i=0;i<bt.length;i++){
                 System.out.println(bt[i]);
             }
+			String sec = new String(bt);
+			System.out.println(sec);
+			byte[] str = decrypt(bt,"5913215");
+			System.out.println(str);
 //			byte[] bytes = decrypt(str.getBytes("UTF-8"), "5913215");
 //			String str2 = new String(bytes, "UTF-8");
 //			System.out.println(str2);

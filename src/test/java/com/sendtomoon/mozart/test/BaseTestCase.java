@@ -1,6 +1,8 @@
 package com.sendtomoon.mozart.test;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
@@ -47,6 +49,11 @@ public class BaseTestCase {
 
 	@Test
 	public void test3() {
+		Map<Object,Object> map = new HashMap<Object,Object>();
+		map.put(null, null);
+		map.put(null, null);
+		map.put(null, null);
+		
 	}
 
 	@Test

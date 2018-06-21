@@ -79,10 +79,10 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 
 	@Value("${mail.smtpPort}")
 	private String smtpPort;
-	
+
 	@Value("${rsa.privateKey}")
 	private String privateKey;
-	
+
 	@Value("${rsa.publicKey}")
 	private String publicKey;
 
@@ -101,7 +101,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 		try {
 			LoginInfoDTO stok = new LoginInfoDTO();
 			logger.info("GetStok-request-URL:[" + loginURL + "],param:[" + jsonForLogin + "]");
-			Map<String, Object> getStok = httpClient.getHttpClient(loginURL, jsonForLogin, null, null);
+			Map<String, Object> getStok = httpClient.getHttpClient(loginURL, jsonForLogin, null, null, "POST");
 			logger.info("GetStok-respon:" + getStok.get("responseMsg"));
 			@SuppressWarnings("unchecked")
 			List<Cookie> lc = (List<Cookie>) getStok.get("cookie");
@@ -140,7 +140,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 			logger.info("GetWanPage-request-URL:[requestURL],param:[" + jsonGetWan + "]");
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("Accept", "application/json, text/plain, */*");
-			Map<String, Object> getWan = httpClient.getHttpClient(requestURL, jsonGetWan, header, cookie);
+			Map<String, Object> getWan = httpClient.getHttpClient(requestURL, jsonGetWan, header, cookie, "POST");
 			logger.info("GetWanPage-respon:" + getWan.get("responseMsg"));
 			WanPageDTO wp = JSON.parseObject(getWan.get("responseMsg").toString(), WanPageDTO.class);
 			wp.setDate(TimeUtil.now());
@@ -157,8 +157,8 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 		return null;
 	}
 
-	/**r
-	 * 更新DNS地址到GoDaddy
+	/**
+	 * r 更新DNS地址到GoDaddy
 	 */
 	@Override
 	public void renewDNS(String ipAddress) {
@@ -168,7 +168,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 			header.put(ContentType, applicationjson);
 			String requestBody = "{\"data\":\"" + ipAddress + "\"}";
 			logger.info("RenewDNS-params-[URI:" + httpsURI + ";RequestBody:" + requestBody + ";Header:" + header);
-			Map<String, Object> response = httpClient.getHttpsClient(httpsURI, requestBody, header);
+			Map<String, Object> response = httpClient.getHttpsClient(httpsURI, requestBody, header, "PUT");
 			logger.info("RenewDNS-result-[Status:" + response.get("status") + ";ResponseMsg:"
 					+ response.get("responseMsg"));
 		} catch (Exception e) {
@@ -206,11 +206,11 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 			errorMongoDAO.saveError(error);
 		}
 	}
-	
+
 	@Override
 	public String encryptByPublicKey(String info) {
 		try {
-			return ByteUtil.toHexString(RSAUtils.encryptByPublicKey(info.getBytes(),publicKey));
+			return ByteUtil.toHexString(RSAUtils.encryptByPublicKey(info.getBytes(), publicKey));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

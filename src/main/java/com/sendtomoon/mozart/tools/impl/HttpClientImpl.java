@@ -19,6 +19,7 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.CookieStore;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
@@ -31,14 +32,14 @@ import org.apache.http.protocol.HTTP;
 import org.springframework.stereotype.Component;
 
 import com.sendtomoon.mozart.base.BaseComponent;
-import com.sendtomoon.mozart.tools.HttpClient;
+import com.sendtomoon.mozart.service.HttpClientSB;
 
 @Component
-public class HttpClientImpl extends BaseComponent implements HttpClient {
+public class HttpClient extends BaseComponent{
 	
 	static CookieStore cookieStore = new BasicCookieStore();
 
-	public SSLContext createIgnoreVerifySSL() throws NoSuchAlgorithmException, KeyManagementException {
+	public static SSLContext createIgnoreVerifySSL() throws NoSuchAlgorithmException, KeyManagementException {
 		SSLContext sc = SSLContext.getInstance("SSLv3");
 
 		// 实现一个X509TrustManager接口，用于绕过验证，不用修改里面的方法
@@ -105,30 +106,25 @@ public class HttpClientImpl extends BaseComponent implements HttpClient {
 		return respMap;
 	}
 
-	@Override
-	public Map<String, Object> getHttpsClient(String url, String requestBody, Map<String, Object> header)
+	public static Map<String, String> httpsClientPut(String url, String requestBody, Map<String, String> header)
 			throws ClientProtocolException, IOException, NoSuchAlgorithmException, KeyManagementException,
 			URISyntaxException {
-		Map<String, Object> respMap = new HashMap<String, Object>();
+		Map<String, String> respMap = new HashMap<String, String>();
 		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
-		httpClientBuilder.setSSLContext(this.createIgnoreVerifySSL());
+		httpClientBuilder.setSSLContext(createIgnoreVerifySSL());
 		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
-		// URL url1 = new URL(url);
-		// URI uri = new URI(url1.getProtocol(), url1.getHost(), url1.getPath(),
-		// url1.getQuery(), null);
 		HttpPut put = new HttpPut(url);
-		for (Entry<String, Object> entry : header.entrySet()) {
+		for (Entry<String, String> entry : header.entrySet()) {
 			put.setHeader(entry.getKey(), entry.getValue().toString());
 		}
-		StringEntity se = new StringEntity(requestBody, "utf-8");
+		StringEntity se = new StringEntity(requestBody, "UTF-8");
 		se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
 		put.setEntity(se);
 		// 发送请求
 		HttpResponse httpResponse = closeableHttpClient.execute(put);
-		// logger.info("http-response-info:" + httpResponse.toString());
 		// 获取响应输入流
 		InputStream inStream = httpResponse.getEntity().getContent();
-		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "utf-8"));
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
 		StringBuilder strber = new StringBuilder();
 		String line = null;
 		while ((line = reader.readLine()) != null) {
@@ -139,5 +135,33 @@ public class HttpClientImpl extends BaseComponent implements HttpClient {
 		respMap.put("responseMsg", strber.toString());
 		return respMap;
 	}
+	
+	public static Map<String, String> httpsClientGet(String url, Map<String, String> header)
+			throws ClientProtocolException, IOException, NoSuchAlgorithmException, KeyManagementException,
+			URISyntaxException {
+		Map<String, String> respMap = new HashMap<String, String>();
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		httpClientBuilder.setSSLContext(createIgnoreVerifySSL());
+		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+		HttpGet put = new HttpGet(url);
+		for (Entry<String, String> entry : header.entrySet()) {
+			put.setHeader(entry.getKey(), entry.getValue().toString());
+		}
+		// 发送请求
+		HttpResponse httpResponse = closeableHttpClient.execute(put);
+		// 获取响应输入流
+		InputStream inStream = httpResponse.getEntity().getContent();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+		StringBuilder strber = new StringBuilder();
+		String line = null;
+		while ((line = reader.readLine()) != null) {
+			strber.append(line);
+		}
+		inStream.close();
+		respMap.put("status", String.valueOf(httpResponse.getStatusLine().getStatusCode()));
+		respMap.put("responseMsg", strber.toString());
+		return respMap;
+	}
+	
 
 }
