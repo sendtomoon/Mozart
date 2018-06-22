@@ -1,6 +1,8 @@
 package com.sendtomoon.mozart.test;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,60 +21,63 @@ import com.sendtomoon.mozart.service.GetIPFromMAC1200R;
 import com.sendtomoon.mozart.service.MainService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = ReNew.class)
-@TestPropertySource(locations = { "classpath:application.properties" })
+// @ContextConfiguration(classes = ReNew.class)
+// @TestPropertySource(locations = { "classpath:application.properties" })
 public class BaseTestCase {
-	@Autowired
-	GetIP getIP;
-
-	@Autowired
-	MainService mainService;
-	
-	@Autowired
-	GetIPFromMAC1200R mac1200r;
 
 	@Test
 	public void test1() throws ClientProtocolException, IOException {
-		// getIP.getStok();
 	}
 
 	@Test
 	public void test2() throws ClientProtocolException, IOException {
-		try {
-			WanPageDTO wp = getIP.getWanPage(getIP.getStok().getCookie());
-			System.err.println(wp);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
- 
+
 	}
 
 	@Test
 	public void test3() {
-		Map<Object,Object> map = new HashMap<Object,Object>();
+		Map<Object, Object> map = new HashMap<Object, Object>();
 		map.put(null, null);
 		map.put(null, null);
 		map.put(null, null);
-		
+
 	}
 
 	@Test
 	public void test4() {
-		mainService.renewtoGoddy();
 	}
 
 	@Test
 	public void test5() {
 		try {
-			getIP.sendEMailForIP("dsfdasfdsa");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Test
 	public void test6() {
-		mac1200r.getIP();
-		
+
 	}
+
+	@Test
+	public void test7() {
+		Date now1 = new Date();
+		try {
+			Thread.sleep(100);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		Date now2 = new Date();
+		System.out.println(now1.before(now2));
+
+		Date endDate = new Date(1529596800);
+		Date now = new Date();
+		if (now.after(endDate)) {
+			System.out.println(true);
+		} else {
+			System.out.println(false);
+		}
+	}
+
 }

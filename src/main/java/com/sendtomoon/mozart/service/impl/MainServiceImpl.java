@@ -13,7 +13,6 @@ import com.sendtomoon.mozart.entity.WanPageDTO;
 import com.sendtomoon.mozart.service.GetIP;
 import com.sendtomoon.mozart.service.GetIPFromMAC1200R;
 import com.sendtomoon.mozart.service.MainService;
-import com.sendtomoon.mozart.tools.HttpClient;
 import com.sendtomoon.mozart.tools.HttpsClient;
 
 @Component
@@ -24,9 +23,6 @@ public class MainServiceImpl extends BaseComponent implements MainService {
 	
 	@Autowired
 	HttpsClient httpsClient;
-	
-	@Autowired
-	HttpClient httpClient;
 	
 	@Autowired
 	ErrorMongoDAO errorMongoDAO;

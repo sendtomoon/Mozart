@@ -32,11 +32,10 @@ import org.apache.http.protocol.HTTP;
 import org.springframework.stereotype.Component;
 
 import com.sendtomoon.mozart.base.BaseComponent;
-import com.sendtomoon.mozart.service.HttpClientSB;
 
 @Component
-public class HttpClient extends BaseComponent{
-	
+public class HttpClient extends BaseComponent {
+
 	static CookieStore cookieStore = new BasicCookieStore();
 
 	public static SSLContext createIgnoreVerifySSL() throws NoSuchAlgorithmException, KeyManagementException {
@@ -64,14 +63,13 @@ public class HttpClient extends BaseComponent{
 		return sc;
 	}
 
-	@Override
-	public Map<String, Object> getHttpClient(String url, String requestBody, Map<String, Object> header,CookieStore cookie)
-			throws ClientProtocolException, IOException {
+	public static Map<String, Object> getHttpClient(String url, String requestBody, Map<String, Object> header,
+			CookieStore cookie) throws ClientProtocolException, IOException {
 		CloseableHttpClient closeableHttpClient = null;
 		Map<String, Object> respMap = new HashMap<String, Object>();
-		if(null==cookie) {
+		if (null == cookie) {
 			closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookieStore).build();
-		}else {
+		} else {
 			closeableHttpClient = HttpClients.custom().setDefaultCookieStore(cookie).build();
 		}
 		HttpPost post = new HttpPost(url);
@@ -136,6 +134,36 @@ public class HttpClient extends BaseComponent{
 		return respMap;
 	}
 	
+	public static Map<String, String> httpsClientPost(String url, String requestBody, Map<String, String> header)
+			throws ClientProtocolException, IOException, NoSuchAlgorithmException, KeyManagementException,
+			URISyntaxException {
+		Map<String, String> respMap = new HashMap<String, String>();
+		HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
+		httpClientBuilder.setSSLContext(createIgnoreVerifySSL());
+		CloseableHttpClient closeableHttpClient = httpClientBuilder.build();
+		HttpPost put = new HttpPost(url);
+		for (Entry<String, String> entry : header.entrySet()) {
+			put.setHeader(entry.getKey(), entry.getValue().toString());
+		}
+		StringEntity se = new StringEntity(requestBody, "UTF-8");
+		se.setContentEncoding(new BasicHeader(HTTP.CONTENT_TYPE, "application/json"));
+		put.setEntity(se);
+		// 发送请求
+		HttpResponse httpResponse = closeableHttpClient.execute(put);
+		// 获取响应输入流
+		InputStream inStream = httpResponse.getEntity().getContent();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inStream, "UTF-8"));
+		StringBuilder strber = new StringBuilder();
+		String line = null;
+		while ((line = reader.readLine()) != null) {
+			strber.append(line);
+		}
+		inStream.close();
+		respMap.put("status", String.valueOf(httpResponse.getStatusLine().getStatusCode()));
+		respMap.put("responseMsg", strber.toString());
+		return respMap;
+	}
+
 	public static Map<String, String> httpsClientGet(String url, Map<String, String> header)
 			throws ClientProtocolException, IOException, NoSuchAlgorithmException, KeyManagementException,
 			URISyntaxException {
@@ -162,6 +190,5 @@ public class HttpClient extends BaseComponent{
 		respMap.put("responseMsg", strber.toString());
 		return respMap;
 	}
-	
 
 }

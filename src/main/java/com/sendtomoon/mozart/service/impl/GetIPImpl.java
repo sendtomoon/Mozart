@@ -24,8 +24,8 @@ import com.sendtomoon.mozart.entity.ErrorDTO;
 import com.sendtomoon.mozart.entity.LoginInfoDTO;
 import com.sendtomoon.mozart.entity.WanPageDTO;
 import com.sendtomoon.mozart.service.GetIP;
-import com.sendtomoon.mozart.tools.HttpClient;
 import com.sendtomoon.mozart.tools.TimeUtil;
+import com.sendtomoon.mozart.tools.impl.HttpClient;
 import com.sendtomoon.mozart.tools.security.ByteUtil;
 import com.sendtomoon.mozart.tools.security.RSAUtils;
 
@@ -90,8 +90,6 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 	StokMongoDAO stokMongoDAO;
 	@Autowired
 	ErrorMongoDAO errorMongoDAO;
-	@Autowired
-	HttpClient httpClient;
 
 	/**
 	 * 登陆路由器，获取Cookie
@@ -101,7 +99,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 		try {
 			LoginInfoDTO stok = new LoginInfoDTO();
 			logger.info("GetStok-request-URL:[" + loginURL + "],param:[" + jsonForLogin + "]");
-			Map<String, Object> getStok = httpClient.getHttpClient(loginURL, jsonForLogin, null, null, "POST");
+			Map<String, Object> getStok = HttpClient.getHttpClient(loginURL, jsonForLogin, null, null);
 			logger.info("GetStok-respon:" + getStok.get("responseMsg"));
 			@SuppressWarnings("unchecked")
 			List<Cookie> lc = (List<Cookie>) getStok.get("cookie");
@@ -140,7 +138,7 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 			logger.info("GetWanPage-request-URL:[requestURL],param:[" + jsonGetWan + "]");
 			Map<String, Object> header = new HashMap<String, Object>();
 			header.put("Accept", "application/json, text/plain, */*");
-			Map<String, Object> getWan = httpClient.getHttpClient(requestURL, jsonGetWan, header, cookie, "POST");
+			Map<String, Object> getWan = HttpClient.getHttpClient(requestURL, jsonGetWan, header, cookie);
 			logger.info("GetWanPage-respon:" + getWan.get("responseMsg"));
 			WanPageDTO wp = JSON.parseObject(getWan.get("responseMsg").toString(), WanPageDTO.class);
 			wp.setDate(TimeUtil.now());
@@ -163,12 +161,12 @@ public class GetIPImpl extends BaseComponent implements GetIP {
 	@Override
 	public void renewDNS(String ipAddress) {
 		try {
-			Map<String, Object> header = new HashMap<String, Object>();
+			Map<String, String> header = new HashMap<String, String>();
 			header.put(Authorization, ssokey);
 			header.put(ContentType, applicationjson);
 			String requestBody = "{\"data\":\"" + ipAddress + "\"}";
 			logger.info("RenewDNS-params-[URI:" + httpsURI + ";RequestBody:" + requestBody + ";Header:" + header);
-			Map<String, Object> response = httpClient.getHttpsClient(httpsURI, requestBody, header, "PUT");
+			Map<String, String> response = HttpClient.httpsClientPut(httpsURI, requestBody, header);
 			logger.info("RenewDNS-result-[Status:" + response.get("status") + ";ResponseMsg:"
 					+ response.get("responseMsg"));
 		} catch (Exception e) {
