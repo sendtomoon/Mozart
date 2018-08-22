@@ -1,10 +1,12 @@
 package com.sendtomoon.mozart.test;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 import org.apache.http.client.ClientProtocolException;
 import org.junit.Test;
@@ -27,6 +29,15 @@ public class BaseTestCase {
 
 	@Test
 	public void test1() throws ClientProtocolException, IOException {
+		Scanner scan = new Scanner(System.in);
+		System.out.println("请输入割圆次数：");
+		int n = scan.nextInt();
+		double y = 1.0;
+		for (int i = 0; i <= n; i++) {
+			BigDecimal π = new BigDecimal(3).multiply(new BigDecimal(Math.pow(2, i)).setScale(2147483647).multiply(new BigDecimal(y)));
+			System.out.println("第" + i + "次切割,为正" + (6 + 6 * i) + "边形，圆周率π≈" + π);
+			y = Math.sqrt(2 - Math.sqrt(4 - y * y));
+		}
 	}
 
 	@Test
@@ -45,19 +56,43 @@ public class BaseTestCase {
 
 	@Test
 	public void test4() {
+		String str = "123456";
+		String[] arr = str.split(",");
+		System.err.println(arr[0]);
 	}
 
 	@Test
 	public void test5() {
 		try {
+			String code = "32";
+			String zero = "";
+			if (6 != code.length()) {
+				for (int i = 1; i <= 6 - code.length(); i++) {
+					zero = zero + "0";
+				}
+				code = zero + code;
+			}
+			System.out.println(code);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public String autoGenericCode(String code, int num) {
+		String result = "";
+		result = String.format("%0" + num + "d", Integer.parseInt(code) + 1);
+
+		return result;
+	}
+
 	@Test
 	public void test6() {
-
+		String s1 = "Programming";
+		String s2 = new String("Programming");
+		String s3 = "Program" + "ming";
+		System.out.println(s1 == s2);
+		System.out.println(s1 == s3);
+		System.out.println(s1 == s1.intern());
 	}
 
 	@Test
@@ -78,6 +113,11 @@ public class BaseTestCase {
 		} else {
 			System.out.println(false);
 		}
+	}
+
+	@Test
+	public void test8() {
+		System.err.println();
 	}
 
 }
